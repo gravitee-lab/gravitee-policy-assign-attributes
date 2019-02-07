@@ -1,0 +1,99 @@
+= Assign Attributes Policy
+
+ifdef::env-github[]
+image:https://ci.gravitee.io/buildStatus/icon?job=gravitee-io/gravitee-policy-assign-attributes/master["Build status", link="https://ci.gravitee.io/buildStatus/icon?job=gravitee-io/gravitee-policy-assign-attributes/master/"]
+image:https://badges.gitter.im/Join Chat.svg["Gitter", link="https://gitter.im/gravitee-io/gravitee-io?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"]
+endif::[]
+
+== Phase
+
+[cols="^2,^2,^2,^2",options="header"]
+|===
+|onRequest|onResponse|onRequestContent|onResponseContent
+
+|X
+|X
+|-
+|-
+
+|===
+
+== Description
+
+The `assign attributes` policy is used to set variables such as request attributes or other attributes to the execution context.
+
+It can be useful if you want to retrieve initial request attributes after Transform Headers/Query Parameters policies and reuse them afterwards (Dynamic Routing for example).
+
+=== Example
+
+=== Request headers
+
+Let's say we want to inject request attributes into the context attributes.
+
+
+```
+"assign-attributes": {
+    "attributes": [
+        {
+            "name": "initialContentTypeHeader,
+            "value": "{#request.headers['Content-Type']}"
+        },
+        {
+            "name": "initialFooParamHeader,
+            "value": "{#request.params['foo']}"
+        }
+    ]
+}
+```
+
+To extract the request attributes you can use the following syntax:
+
+Get the content-type header:
+
+----
+{#context.attributes['initialContentTypeHeader']}
+----
+
+Get the foo query param:
+
+----
+{#context.attributes['initialFooParamHeader']}
+----
+
+=== Request object
+
+You can also be more general and put complex object into the context attributes:
+
+```
+"assign-attributes": {
+    "attributes": [
+        {
+            "name": "initialRequest,
+            "value": "{#request}"
+        }
+    ]
+}
+
+To extract the request attributes you can use the following syntax :
+
+Get the content-type header:
+
+----
+{#context.attributes['initialRequest'].headers['content-type']}
+----
+
+Get the foo query param:
+
+----
+{#context.attributes['initialRequest'].params['foo']}
+----
+
+== Http Status Code
+
+|===
+|Code |Message
+
+.^| ```500```
+| An error occurs while setting request attributes to the execution context
+
+|===

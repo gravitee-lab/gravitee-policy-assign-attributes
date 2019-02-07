@@ -1,0 +1,38 @@
+{
+  "type": "object",
+  "id": "urn:jsonschema:io:gravitee:policy:assignattributes:configuration:AssignAttributesPolicyConfiguration",
+  "properties": {
+    "scope" : {
+      "title": "Scope",
+      "description": "Execute policy on <strong>request</strong> or <strong>response</strong> phase.",
+      "type" : "string",
+      "default": "REQUEST",
+      "enum" : [ "REQUEST", "RESPONSE" ]
+    },
+    "attributes" : {
+      "type" : "array",
+      "title": "Assign context attributes",
+      "items" : {
+        "type" : "object",
+        "id" : "urn:jsonschema:io:gravitee:policy:assignattributes:configuration:Attribute",
+        "title": "Attribute",
+        "properties" : {
+          "name" : {
+            "title": "Name",
+            "description": "Name of the attribute",
+            "type" : "string"
+          },
+          "value" : {
+            "title": "Value",
+            "description": "Value of the attribute (support EL)",
+            "type" : "string"
+          }
+        },
+        "required": [
+          "name",
+          "value"
+        ]
+      }
+    }
+  }
+}
