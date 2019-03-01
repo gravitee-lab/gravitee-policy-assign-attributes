@@ -16,10 +16,10 @@
 package io.gravitee.policy.assignattributes;
 
 import io.gravitee.common.http.HttpHeaders;
+import io.gravitee.el.TemplateEngine;
 import io.gravitee.gateway.api.ExecutionContext;
 import io.gravitee.gateway.api.Request;
 import io.gravitee.gateway.api.Response;
-import io.gravitee.gateway.api.expression.TemplateEngine;
 import io.gravitee.policy.api.PolicyChain;
 import io.gravitee.policy.assignattributes.configuration.AssignAttributesPolicyConfiguration;
 import io.gravitee.policy.assignattributes.configuration.Attribute;
