@@ -111,7 +111,6 @@ public class AssignAttributesPolicyTest {
         // Prepare
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("X-Gravitee-Test", "Value");
-        when(request.headers()).thenReturn(httpHeaders);
 
         when(assignVariablePolicyConfiguration.getAttributes())
                 .thenReturn(Collections.singletonList(new Attribute("Context-Attribute-Key", "{#request.headers['X-Gravitee-Test']}")));
@@ -129,7 +128,6 @@ public class AssignAttributesPolicyTest {
         // Prepare
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("X-Gravitee-Test", "Value");
-        when(response.headers()).thenReturn(httpHeaders);
 
         when(assignVariablePolicyConfiguration.getScope()).thenReturn(PolicyScope.RESPONSE);
         when(assignVariablePolicyConfiguration.getAttributes())
@@ -149,8 +147,6 @@ public class AssignAttributesPolicyTest {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("X-Gravitee-Test", "Value");
         httpHeaders.add("X-Gravitee-Test2", "Value2");
-        when(request.headers()).thenReturn(httpHeaders);
-
 
         List<Attribute> attributes = new LinkedList<>();
         attributes.add(new Attribute("Context-Attribute-Key", "{#request.headers['X-Gravitee-Test']}"));
@@ -172,8 +168,6 @@ public class AssignAttributesPolicyTest {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("X-Gravitee-Test", "Value");
         httpHeaders.add("X-Gravitee-Test2", "Value2");
-        when(response.headers()).thenReturn(httpHeaders);
-
 
         List<Attribute> attributes = new LinkedList<>();
         attributes.add(new Attribute("Context-Attribute-Key", "{#response.headers['X-Gravitee-Test']}"));
