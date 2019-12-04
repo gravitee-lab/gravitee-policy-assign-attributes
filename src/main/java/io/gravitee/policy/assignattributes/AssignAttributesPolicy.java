@@ -18,9 +18,15 @@ package io.gravitee.policy.assignattributes;
 import io.gravitee.gateway.api.ExecutionContext;
 import io.gravitee.gateway.api.Request;
 import io.gravitee.gateway.api.Response;
+import io.gravitee.gateway.api.buffer.Buffer;
+import io.gravitee.gateway.api.stream.BufferedReadWriteStream;
+import io.gravitee.gateway.api.stream.ReadWriteStream;
+import io.gravitee.gateway.api.stream.SimpleReadWriteStream;
 import io.gravitee.policy.api.PolicyChain;
 import io.gravitee.policy.api.annotations.OnRequest;
+import io.gravitee.policy.api.annotations.OnRequestContent;
 import io.gravitee.policy.api.annotations.OnResponse;
+import io.gravitee.policy.api.annotations.OnResponseContent;
 import io.gravitee.policy.assignattributes.configuration.AssignAttributesPolicyConfiguration;
 import io.gravitee.policy.assignattributes.configuration.PolicyScope;
 import org.slf4j.Logger;
@@ -33,11 +39,82 @@ import org.slf4j.LoggerFactory;
 public class AssignAttributesPolicy {
 
     private static final Logger logger = LoggerFactory.getLogger(AssignAttributesPolicy.class);
-    
+
+    private final static String REQUEST_VARIABLE = "request";
+    private final static String RESPONSE_VARIABLE = "request";
+
     private final AssignAttributesPolicyConfiguration assignVariablePolicyConfiguration;
 
     public AssignAttributesPolicy(final AssignAttributesPolicyConfiguration assignVariablePolicyConfiguration) {
         this.assignVariablePolicyConfiguration = assignVariablePolicyConfiguration;
+    }
+
+    @OnRequestContent
+    public ReadWriteStream onRequestContent(Request request, ExecutionContext executionContext) {
+        if (assignVariablePolicyConfiguration.getScope() != null && assignVariablePolicyConfiguration.getScope() == PolicyScope.REQUEST_CONTENT) {
+            return new BufferedReadWriteStream() {
+
+                Buffer buffer = Buffer.buffer();
+
+                @Override
+                public SimpleReadWriteStream<Buffer> write(Buffer content) {
+                    buffer.appendBuffer(content);
+                    return this;
+                }
+
+                @Override
+                public void end() {
+                    String content = buffer.toString();
+                    executionContext.getTemplateEngine().getTemplateContext()
+                            .setVariable(REQUEST_VARIABLE, new EvaluableRequest(request, content));
+
+                    // assign
+                    assign(executionContext);
+
+                    if (buffer.length() > 0) {
+                        super.write(buffer);
+                    }
+
+                    super.end();
+                }
+            };
+        }
+
+        return null;
+    }
+
+    @OnResponseContent
+    public ReadWriteStream onResponseContent(Response response, ExecutionContext executionContext) {
+        if (assignVariablePolicyConfiguration.getScope() != null && assignVariablePolicyConfiguration.getScope() == PolicyScope.RESPONSE_CONTENT) {
+            return new BufferedReadWriteStream() {
+
+                Buffer buffer = Buffer.buffer();
+
+                @Override
+                public SimpleReadWriteStream<Buffer> write(Buffer content) {
+                    buffer.appendBuffer(content);
+                    return this;
+                }
+
+                @Override
+                public void end() {
+                    String content = buffer.toString();
+                    executionContext.getTemplateEngine().getTemplateContext()
+                            .setVariable(RESPONSE_VARIABLE, new EvaluableResponse(response, content));
+
+                    // assign
+                    assign(executionContext);
+
+                    if (buffer.length() > 0) {
+                        super.write(buffer);
+                    }
+
+                    super.end();
+                }
+            };
+        }
+
+        return null;
     }
 
     @OnRequest

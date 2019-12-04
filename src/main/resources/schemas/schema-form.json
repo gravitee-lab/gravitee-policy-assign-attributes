@@ -7,7 +7,7 @@
       "description": "Execute policy on <strong>request</strong> or <strong>response</strong> phase.",
       "type" : "string",
       "default": "REQUEST",
-      "enum" : [ "REQUEST", "RESPONSE" ]
+      "enum" : [ "REQUEST", "RESPONSE", "REQUEST_CONTENT", "RESPONSE_CONTENT" ]
     },
     "attributes" : {
       "type" : "array",

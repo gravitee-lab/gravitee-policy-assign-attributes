@@ -13,16 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.gravitee.policy.assignattributes.configuration;
+package io.gravitee.policy.assignattributes;
+
+import io.gravitee.common.http.HttpHeaders;
+import io.gravitee.gateway.api.Response;
 
 /**
- * @author Titouan COMPIEGNE (titouan.compiegne at graviteesource.com)
+ * @author David BRASSELY (david.brassely at graviteesource.com)
  * @author GraviteeSource Team
  */
-public enum PolicyScope {
+public class EvaluableResponse {
 
-    REQUEST,
-    RESPONSE,
-    REQUEST_CONTENT,
-    RESPONSE_CONTENT
+    private final Response response;
+    private final String content;
+
+    EvaluableResponse(final Response response, final String content) {
+        this.response = response;
+        this.content = content;
+    }
+
+    public int getStatus() {
+        return response.status();
+    }
+
+    public HttpHeaders getHeaders() {
+        return response.headers();
+    }
+
+    public String getContent() {
+        return content;
+    }
 }
