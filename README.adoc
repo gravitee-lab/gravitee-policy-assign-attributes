@@ -73,6 +73,7 @@ You can also be more general and put complex object into the context attributes:
         }
     ]
 }
+```
 
 To extract the request attributes you can use the following syntax :
 
